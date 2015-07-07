@@ -13,14 +13,17 @@
     <string name="Users">Users</string>
     <string name="MyProfile">My profile</string>
     
-    <string name="login">Log in</string>
-    <string name="register">Registrati</string>
-    <string name="cancel">Annulla</string>
-    <string name="confirm">Conferma</string>
+    <string name="login">Login</string>
+    <string name="registration">Registration</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
     
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="logout">Logout</string>
+    
+    <string name="form">Form</string>
+    <string name="welcomeback">Welcome back</string>
 
 </resources>

@@ -11,11 +11,14 @@ import android.content.DialogInterface.OnShowListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -46,9 +49,10 @@ import com.parse.SignUpCallback;
 	private boolean isRegister, isLoading;
 	private LinearLayout mFormLayout;
 	private ProgressBar mPbLoading;
+	private SwitchCompat mSwForm;
 	private EditText mEtUsername, mEtPassword, mEtEmail;
 
-	private Button mPositiveButton, mNeutralButton, mNegativeButton;
+	private Button mPositiveButton;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ import com.parse.SignUpCallback;
 
 		mFormLayout = (LinearLayout) view.findViewById(R.id.formLayout);
 		mPbLoading = (ProgressBar) view.findViewById(R.id.pbLoading);
+		mSwForm = (SwitchCompat) view.findViewById(R.id.swForm);
 		mEtUsername = (EditText) view.findViewById(R.id.etUsername);
 		mEtPassword = (EditText) view.findViewById(R.id.etPassword);
 		mEtEmail = (EditText) view.findViewById(R.id.etEmail);
@@ -68,65 +73,49 @@ import com.parse.SignUpCallback;
 			isRegister = savedInstanceState.getBoolean(IS_REGISTER_TAG);
 		}
 
-		String registerString = !isRegister ? getString(R.string.register)
-				: getString(R.string.login);
+		mSwForm.setChecked(isRegister);
+		mSwForm.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				isRegister = !isRegister;
+				invalidateForm();
+			}
+		});
 
-		builder.setView(view)
-				.setPositiveButton(getString(R.string.confirm), null)
-				.setNegativeButton(getString(R.string.cancel), null)
-				.setNeutralButton(registerString, null);
+		builder.setView(view).setPositiveButton(getString(R.string.confirm), null);
 
 		Dialog dialog = builder.create();
 		dialog.setOnShowListener(new OnShowListener() {
 			@Override
 			public void onShow(DialogInterface dialog) {
-				mPositiveButton = ((AlertDialog) dialog)
-						.getButton(Dialog.BUTTON_POSITIVE);
-				mNeutralButton = ((AlertDialog) dialog)
-						.getButton(Dialog.BUTTON_NEUTRAL);
-				mNegativeButton = ((AlertDialog) dialog)
-						.getButton(Dialog.BUTTON_NEGATIVE);
-				
+				mPositiveButton = ((AlertDialog) dialog).getButton(Dialog.BUTTON_POSITIVE);
 				mPositiveButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						onPositiveButtonClick();
 					}
 				});
-				
-				mNeutralButton.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						onNeutralButtonClick();
-					}
-				});
 			}
 		});
 
-		if (isRegister) mEtEmail.setVisibility(View.VISIBLE);
-		if (isLoading) startLoading();
+		invalidateForm();
+		if (isLoading) toggleLoading(true);
 
 		return dialog;
 	}
-
-	private void startLoading() {
-
-		isLoading = true;
-		mFormLayout.setVisibility(View.GONE);
-		mPbLoading.setVisibility(View.VISIBLE);
-		mPositiveButton.setEnabled(false);
-		mNeutralButton.setEnabled(false);
-		mNegativeButton.setEnabled(false);
+	
+	private void invalidateForm() {
+		mEtEmail.setVisibility(isRegister ? View.VISIBLE : View.GONE);
+		mSwForm.setText(isRegister ? getString(R.string.registration) : getString(R.string.login));
 	}
-
-	private void stopLoading() {
-
-		isLoading = false;
-		mFormLayout.setVisibility(View.VISIBLE);
-		mPbLoading.setVisibility(View.GONE);
-		mPositiveButton.setEnabled(true);
-		mNeutralButton.setEnabled(true);
-		mNegativeButton.setEnabled(true);
+	
+	private void toggleLoading(boolean loading) {
+		isLoading = loading;
+		Dialog dialog = getDialog();
+		if (dialog != null) dialog.setCancelable(!loading);
+		mPositiveButton.setEnabled(!loading);
+		mFormLayout.setVisibility(loading ? View.GONE : View.VISIBLE);
+		mPbLoading.setVisibility(loading? View.VISIBLE : View.GONE);
 	}
 
 	@Override
@@ -177,7 +166,7 @@ import com.parse.SignUpCallback;
 
 		// form ok
 
-		startLoading();
+		toggleLoading(true);
 
 		if (isRegister)
 			AccountController.INSTANCE.register(username, password, email, new SignUpCallback() {
@@ -185,7 +174,7 @@ import com.parse.SignUpCallback;
 				public void done(ParseException pe) {
 					if (pe != null) {
 						Log.i(TAG, "Register failed: " + pe.getMessage());
-						stopLoading();
+						toggleLoading(false);
 					}
 					else {
 						if (mListener != null) mListener.onLoggedIn();
@@ -199,7 +188,7 @@ import com.parse.SignUpCallback;
 				public void done(ParseUser user, ParseException pe) {
 					if (pe != null) {
 						Log.i(TAG, "Login failed: " + pe.getMessage());
-						stopLoading();
+						toggleLoading(false);
 					}
 					else {
 						if (mListener != null) mListener.onLoggedIn();
@@ -207,16 +196,5 @@ import com.parse.SignUpCallback;
 					}
 				}
 			});
-	}
-
-	private void onNeutralButtonClick() {
-		mEtEmail.setVisibility(isRegister ? View.GONE : View.VISIBLE);
-
-		if (mNeutralButton != null) {
-			mNeutralButton.setText(isRegister ? getString(R.string.register) : getString(R.string.login));
-			mNeutralButton.invalidate();
-		}
-
-		isRegister = !isRegister;
 	}
 }

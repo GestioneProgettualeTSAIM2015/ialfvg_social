@@ -1,19 +1,22 @@
 package it.ialweb.poi.fragments;
 
-import com.parse.ParseUser;
-
 import it.ialweb.poi.R;
 import it.ialweb.poi.core.AccountController;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment.ILoginDialogFragment;
+import android.animation.LayoutTransition;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
+
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.parse.ParseUser;
 
 public class MyProfileFragment extends Fragment implements ILoginDialogFragment {
 	
@@ -22,7 +25,7 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		return myProfileFragment;
 	}
 
-	private Button mToggleLogin;
+	private BootstrapButton mToggleLogin;
 	private TextView mUsername;
 	private TextView mEmail;
 
@@ -32,7 +35,7 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		
 		View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 		
-		mToggleLogin = (Button) view.findViewById(R.id.btnToggle);
+		mToggleLogin = (BootstrapButton) view.findViewById(R.id.btnToggle);
 		mUsername = (TextView) view.findViewById(R.id.tvUsername);
 		mEmail = (TextView) view.findViewById(R.id.tvEmail);
 		
@@ -56,6 +59,9 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		mUsername.setVisibility(View.GONE);
 		mEmail.setVisibility(View.GONE);
 		mToggleLogin.setText(getString(R.string.login));
+		mToggleLogin.setBootstrapType("info");
+		
+		Animations.newRelativeRightAnimator(mToggleLogin).start();
 	}
 	
 	private void showLogIn() {
@@ -76,11 +82,29 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		}	
 		
 		mToggleLogin.setText(getString(R.string.logout));
+		mToggleLogin.setBootstrapType("warning");
+		Animations.newRelativeRightAnimator(mToggleLogin).start();
 	}
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
+	}
+}
+
+class Animations {
+	
+	private final static int DEFAULT_DURATION = 400;
+	
+	public static ObjectAnimator newRelativeRightAnimator(View view) {
+		return newYRotationAnimator(view, DEFAULT_DURATION);
+	}
+	
+	public static ObjectAnimator newYRotationAnimator(View view, int duration) {
+		ObjectAnimator anim = ObjectAnimator.ofFloat(view, "rotationY", 0.0f, 360.0f);
+		anim.setInterpolator(new AccelerateDecelerateInterpolator());
+		anim.setDuration(duration);
+		return anim;
 	}
 }
