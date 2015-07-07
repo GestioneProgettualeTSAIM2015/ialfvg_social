@@ -4,16 +4,14 @@ import it.ialweb.poi.R;
 import it.ialweb.poi.core.AccountController;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment.ILoginDialogFragment;
-import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.parse.ParseUser;
@@ -28,7 +26,7 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 	private BootstrapButton mToggleLogin;
 	private TextView mUsername;
 	private TextView mEmail;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -40,7 +38,7 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		mEmail = (TextView) view.findViewById(R.id.tvEmail);
 		
 		if(!AccountController.INSTANCE.isLoggedIn()) onLoggedOut();
-		else onLoggedIn();
+		else showLoginView();
 		
 		mToggleLogin.setOnClickListener(new OnClickListener() {
 			@Override
@@ -48,7 +46,8 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 				if(AccountController.INSTANCE.isLoggedIn()) {
 					AccountController.INSTANCE.logOut();
 					onLoggedOut();
-				} else showLogIn();
+					Toast.makeText(getActivity(), getString(R.string.byebye), Toast.LENGTH_SHORT).show();
+				} else showLoginDialog();
 			}
 		});
 		
@@ -60,18 +59,24 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		mEmail.setVisibility(View.GONE);
 		mToggleLogin.setText(getString(R.string.login));
 		mToggleLogin.setBootstrapType("info");
-		
-		Animations.newRelativeRightAnimator(mToggleLogin).start();
 	}
 	
-	private void showLogIn() {
+	private void showLoginDialog() {
 		LoginDialogFragment dialog = LoginDialogFragment.newInstance();
 		dialog.setTargetFragment(this, 0);
 		dialog.show(getActivity().getSupportFragmentManager(),	LoginDialogFragment.TAG);
 	}
-
+	
 	@Override
 	public void onLoggedIn() {
+		ParseUser user = AccountController.INSTANCE.getUser();
+		if (user != null) Toast.makeText(getActivity(),
+				getString(R.string.welcomeback) + " " + user.getUsername(), Toast.LENGTH_SHORT).show();
+			
+		showLoginView();
+	}
+	
+	private void showLoginView() {
 		ParseUser user = AccountController.INSTANCE.getUser();
 		
 		if(user != null) {
@@ -83,28 +88,10 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		
 		mToggleLogin.setText(getString(R.string.logout));
 		mToggleLogin.setBootstrapType("warning");
-		Animations.newRelativeRightAnimator(mToggleLogin).start();
 	}
 	
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		// TODO Auto-generated method stub
+	public void onSaveInstanceState(Bundle outState) {		
 		super.onSaveInstanceState(outState);
-	}
-}
-
-class Animations {
-	
-	private final static int DEFAULT_DURATION = 400;
-	
-	public static ObjectAnimator newRelativeRightAnimator(View view) {
-		return newYRotationAnimator(view, DEFAULT_DURATION);
-	}
-	
-	public static ObjectAnimator newYRotationAnimator(View view, int duration) {
-		ObjectAnimator anim = ObjectAnimator.ofFloat(view, "rotationY", 0.0f, 360.0f);
-		anim.setInterpolator(new AccelerateDecelerateInterpolator());
-		anim.setDuration(duration);
-		return anim;
 	}
 }

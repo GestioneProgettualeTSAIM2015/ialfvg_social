@@ -23,7 +23,7 @@
     <string name="email">Email</string>
     <string name="logout">Logout</string>
     
-    <string name="form">Form</string>
     <string name="welcomeback">Welcome back</string>
+    <string name="byebye">bye-bye</string>
 
 </resources>
