@@ -10,22 +10,22 @@ import android.app.Application;
 public class ParseApplication extends Application {
 
 	@Override
-	  public void onCreate() {
-	    super.onCreate();
+	public void onCreate() {
+		super.onCreate();
 
-	    // Initialize Crash Reporting.
-	    ParseCrashReporting.enable(this);
+		// Initialize Crash Reporting.
+		ParseCrashReporting.enable(this);
 
-	    // Enable Local Datastore.
-	    Parse.enableLocalDatastore(this);
+		// Enable Local Datastore.
+		Parse.enableLocalDatastore(this);
 
-	    // Add your initialization code here
-	    Parse.initialize(this);
+		// Add your initialization code here
+		Parse.initialize(this);
 
-	    ParseUser.enableAutomaticUser();
-	    ParseACL defaultACL = new ParseACL();
-	    // Optionally enable public read access.
-	    // defaultACL.setPublicReadAccess(true);
-	    ParseACL.setDefaultACL(defaultACL, true);
-	  }
+		ParseUser.enableAutomaticUser();
+		ParseACL defaultACL = new ParseACL();
+		// Optionally enable public read access.
+		// defaultACL.setPublicReadAccess(true);
+		ParseACL.setDefaultACL(defaultACL, true);
 	}
+}

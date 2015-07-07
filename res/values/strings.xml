@@ -3,19 +3,24 @@
 
     <string name="app_name">EsempioIAL</string>
     
-    <string name="parse_app_id">PUT HERE APP ID</string>
-    <string name="parse_client_key">PUT HERE CLIENT KEY</string>
+    <string name="parse_app_id">EY5SPQ7hN7OedgqAXbwWTDS8tMSSya70efXfWBjH</string>
+    <string name="parse_client_key">xNqQo3MOghCp93e9XE586iaDZHjOQOAWPXVVfnMs</string>
     
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="loading">Loading...</string>
     <string name="error_loading_data">Error loading data</string>
     <string name="retry">Retry</string>
     <string name="Timeline">Timeline</string>
     <string name="Users">Users</string>
     <string name="MyProfile">My profile</string>
-
     
+    <string name="login">Log in</string>
+    <string name="register">Registrati</string>
+    <string name="cancel">Annulla</string>
+    <string name="confirm">Conferma</string>
     
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="logout">Logout</string>
 
 </resources>

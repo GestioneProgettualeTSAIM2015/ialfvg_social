@@ -1,5 +1,6 @@
 package it.ialweb.poi;
 
+import it.ialweb.poi.fragments.MyProfileFragment;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -43,7 +44,13 @@ public class MainActivity extends AppCompatActivity {
 
 			@Override
 			public Fragment getItem(int position) {
-				return new PlaceHolder();
+				switch (position) {
+				case 2:
+					return MyProfileFragment.newInstance();
+
+				default:
+					return new PlaceHolder();
+				}
 			}
 
 			@Override
