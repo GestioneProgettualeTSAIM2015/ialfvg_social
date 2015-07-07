@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:padding="16dp">
+    
+    <LinearLayout
+        android:id="@+id/formLayout"
+        android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical" >
+	    
+	    
+	    <android.support.design.widget.TextInputLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content">
+		 
+		    <EditText
+		        android:id="@+id/etTweet"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:maxLength="140"
+		        android:ems="12"
+		        android:hint="@string/tweet"
+		        android:inputType="textMultiLine"
+		        android:layout_marginBottom="10dp" >
+		        <requestFocus />
+	    	</EditText>
+	    
+		</android.support.design.widget.TextInputLayout>
+	    
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,6 +1,11 @@
 package it.ialweb.poi;
 
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+
 import it.ialweb.poi.fragments.MyProfileFragment;
+import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment;
+import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment.ISendTweetDialogFragment;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -18,7 +23,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ISendTweetDialogFragment {
 
 	private TabLayout tabLayout;
 	private ViewPager viewPager;
@@ -65,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
 		findViewById(R.id.fabBtn).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Snackbar.make(findViewById(R.id.coordinator), "abcdefg", Snackbar.LENGTH_LONG).show();
+				SendTweetDialogFragment dialog = SendTweetDialogFragment.newInstance();
+				dialog.show(getSupportFragmentManager(), SendTweetDialogFragment.TAG);
 			}
 		});
 	}
@@ -96,5 +102,17 @@ public class MainActivity extends AppCompatActivity {
 			});
 			return recyclerView;
 		}
+	}
+
+	@Override
+	public void onSendTweet(String text) {
+
+		ParseUser user = ParseUser.getCurrentUser();
+		ParseObject tweet = new ParseObject("Tweets");
+		tweet.put("message", text);
+//		tweet.put("ownerId", user.getObjectId());
+		tweet.saveInBackground();
+		
+		Snackbar.make(findViewById(R.id.coordinator), "sent: " + text, Snackbar.LENGTH_LONG).show();
 	}
 }
