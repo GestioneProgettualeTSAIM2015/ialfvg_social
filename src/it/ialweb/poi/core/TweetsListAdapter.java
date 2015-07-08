@@ -20,9 +20,9 @@ public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 			public ParseQuery create() {
 				ParseUser user = ParseUser.getCurrentUser();
 				ParseQuery query = new ParseQuery("Tweets");
-				query.orderByAscending("updatedAt");
-//				if (user != null && isMyProfile)
-//					query.whereEqualTo("OwnerId", user.getObjectId());
+				query.orderByDescending("updatedAt");
+				if (user != null && isMyProfile)
+					query.whereEqualTo("createdBy", user);
 				return query;
 			}
 		});
@@ -48,7 +48,8 @@ public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 
 		// Add the author of message
 		TextView ownerTextView = (TextView) v.findViewById(R.id.tweetOwner);
-		ownerTextView.setText(object.getString("ownerId"));
+		ParseUser creator = object.getParseUser("createdBy");
+		ownerTextView.setText(creator.getUsername());
 
 		// Add the message
 		TextView messageView = (TextView) v.findViewById(R.id.tweetText);

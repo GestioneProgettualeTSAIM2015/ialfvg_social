@@ -19,7 +19,7 @@
         android:layout_toRightOf="@id/tweetIcon"
         android:gravity="center_vertical"
         android:layout_margin="5dp"
-        android:textColor="#FF0000" />
+        android:textColor="#DDDDDD" />
  
     <TextView
         android:id="@+id/tweetText"

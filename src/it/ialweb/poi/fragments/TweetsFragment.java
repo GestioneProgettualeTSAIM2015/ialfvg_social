@@ -13,11 +13,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.parse.ParseUser;
 
 public class TweetsFragment extends Fragment {
 	
@@ -45,6 +40,7 @@ public class TweetsFragment extends Fragment {
 	
 	private void initList() {
 		TweetsListAdapter adapter = new TweetsListAdapter(getActivity(), false);
+		
 		mList.setAdapter(adapter);
 		adapter.loadObjects();
 	}
