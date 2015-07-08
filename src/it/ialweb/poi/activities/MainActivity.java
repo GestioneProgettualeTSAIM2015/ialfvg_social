@@ -1,16 +1,18 @@
-package it.ialweb.poi;
+package it.ialweb.poi.activities;
 
-import com.parse.ParseObject;
-import com.parse.ParseUser;
-
+import it.ialweb.poi.R;
+import it.ialweb.poi.core.AccountController;
+import it.ialweb.poi.core.TweetUtils;
 import it.ialweb.poi.fragments.MyProfileFragment;
 import it.ialweb.poi.fragments.TweetsFragment;
 import it.ialweb.poi.fragments.UsersFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
+import it.ialweb.poi.fragments.dialogs.LoginDialogFragment.ILoginDialogFragment;
 import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment;
 import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment.ISendTweetDialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -30,16 +32,19 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements ISendTweetDialogFragment {
+public class MainActivity extends AppCompatActivity implements ISendTweetDialogFragment, ILoginDialogFragment {
 
+	private final static String SENDING_TWEET_TAG = "sendingtweettag";
+	
 	private TabLayout tabLayout;
 	private ViewPager viewPager;
+	
+	private boolean sendingTweet;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
 		tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -80,27 +85,20 @@ public class MainActivity extends AppCompatActivity implements ISendTweetDialogF
 		findViewById(R.id.fabBtn).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ParseUser user = ParseUser.getCurrentUser();
-				if (user != null && user.isAuthenticated()) {
-					SendTweetDialogFragment dialog = SendTweetDialogFragment.newInstance();
-					dialog.show(getSupportFragmentManager(), SendTweetDialogFragment.TAG);
+				if (AccountController.isLoggedIn()) {
+					SendTweetDialogFragment tweetDialog = SendTweetDialogFragment.newInstance();
+					tweetDialog.show(getSupportFragmentManager(), SendTweetDialogFragment.TAG);
 				} else {
+					sendingTweet = true;
 					LoginDialogFragment dialog = LoginDialogFragment.newInstance();
 					dialog.show(getSupportFragmentManager(), LoginDialogFragment.TAG);
 				}
 
 			}
 		});
-	}
-
-	@Override
-	public void onSendTweet(String text) {
-		ParseUser user = ParseUser.getCurrentUser();
-		ParseObject tweet = new ParseObject("TweetTest");
-		tweet.put("message", text);
-		tweet.put("ownerId", user.getObjectId());
-		tweet.saveInBackground();
-		Snackbar.make(findViewById(R.id.coordinator), "sent: " + text, Snackbar.LENGTH_LONG).show();
+		
+		if (savedInstanceState != null)
+			sendingTweet = savedInstanceState.getBoolean(SENDING_TWEET_TAG);
 	}
 	
 	@Override
@@ -110,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements ISendTweetDialogF
 	    return super.onCreateOptionsMenu(menu);
 	}
 	
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    // Handle presses on the action bar items
 	    switch (item.getItemId()) {
@@ -122,9 +119,31 @@ public class MainActivity extends AppCompatActivity implements ISendTweetDialogF
 	    }
 	}
 
-	private void openSettingsActivity()
-	{
+	private void openSettingsActivity() {
 		Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
 		startActivity(intent);
+	}
+	
+	@Override
+	public void onSendTweet(String message) {
+		TweetUtils.sendTweet(message);
+		Snackbar.make(findViewById(R.id.coordinator), "sent: " + message, Snackbar.LENGTH_LONG).show();
+	}
+	
+	public void onLoggedIn() {
+		if (sendingTweet) {
+			sendingTweet = false;
+			SendTweetDialogFragment tweetDialog = SendTweetDialogFragment.newInstance();
+			tweetDialog.show(getSupportFragmentManager(), SendTweetDialogFragment.TAG);
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState,
+			PersistableBundle outPersistentState) {
+		
+		outState.putBoolean(SENDING_TWEET_TAG, sendingTweet);
+		
+		super.onSaveInstanceState(outState, outPersistentState);
 	}
 }

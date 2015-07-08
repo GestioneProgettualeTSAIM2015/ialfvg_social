@@ -10,24 +10,15 @@ import com.parse.SignUpCallback;
 public class AccountController {
 	
 	private final static String TAG = "AccountController";
-
-	public final static AccountController INSTANCE = new AccountController();
 	
-	private AccountController() {}
-	
-	public boolean isLoggedIn() {
+	public static boolean isLoggedIn() {
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		
 		if (currentUser != null) return currentUser.isAuthenticated();
 		else return false;
 	}
 	
-	public ParseUser getUser()
-	{
-		return ParseUser.getCurrentUser();
-	}
-	
-	public void register(String username, String password, String email, SignUpCallback callback) {
+	public static void register(String username, String password, String email, SignUpCallback callback) {
 		Log.i(TAG, "Register: " + username + ":" + password + ":" + email);
 		
 		ParseUser user = new ParseUser();
@@ -38,17 +29,17 @@ public class AccountController {
 		user.signUpInBackground(callback);
 	}
 	
-	public void logIn(String username, String password, LogInCallback callback) {
+	public static void logIn(String username, String password, LogInCallback callback) {
 		Log.i(TAG, "Log in: " + username + ":" + password);
 		ParseUser.logInInBackground(username, password, callback);
 	}
 	
-	public void anonymousLogIn(LogInCallback callback) {
+	public static void anonymousLogIn(LogInCallback callback) {
 		Log.i(TAG, "Anonymous log in");
 		ParseAnonymousUtils.logIn(callback);
 	}
 	
-	public void logOut() {
+	public static void logOut() {
 		Log.i(TAG, "Log out");
 		ParseUser.logOut();
 	}

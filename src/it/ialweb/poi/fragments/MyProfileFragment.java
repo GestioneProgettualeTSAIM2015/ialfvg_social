@@ -25,7 +25,7 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		return myProfileFragment;
 	}
 
-	private BootstrapButton mToggleLogin;
+	private BootstrapButton mBtnToggleLogin;
 	private TextView mUsername;
 	private TextView mEmail;
 	private ListView mList;
@@ -36,23 +36,22 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		
 		View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 		
-		mToggleLogin = (BootstrapButton) view.findViewById(R.id.btnToggle);
+		mBtnToggleLogin = (BootstrapButton) view.findViewById(R.id.btnToggle);
 		mUsername = (TextView) view.findViewById(R.id.tvUsername);
 		mEmail = (TextView) view.findViewById(R.id.tvEmail);
 		mList = (ListView) view.findViewById(R.id.listMyProfile);
 		
-		ParseUser user = ParseUser.getCurrentUser();
-		if (user != null && AccountController.INSTANCE.isLoggedIn())
+		if(!AccountController.isLoggedIn()) onLoggedOut();
+		else {
+			showLoginView();
 			initList();
+		}
 
-		if(!AccountController.INSTANCE.isLoggedIn()) onLoggedOut();
-		else showLoginView();
-		
-		mToggleLogin.setOnClickListener(new OnClickListener() {
+		mBtnToggleLogin.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(AccountController.INSTANCE.isLoggedIn()) {
-					AccountController.INSTANCE.logOut();
+				if(AccountController.isLoggedIn()) {
+					AccountController.logOut();
 					onLoggedOut();
 					Toast.makeText(getActivity(), getString(R.string.byebye), Toast.LENGTH_SHORT).show();
 				} else showLoginDialog();
@@ -72,8 +71,8 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 	private void onLoggedOut() {
 		mUsername.setVisibility(View.GONE);
 		mEmail.setVisibility(View.GONE);
-		mToggleLogin.setText(getString(R.string.login));
-		mToggleLogin.setBootstrapType("info");
+		mBtnToggleLogin.setText(getString(R.string.login));
+		mBtnToggleLogin.setBootstrapType("info");
 	}
 	
 	private void showLoginDialog() {
@@ -84,7 +83,7 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 	
 	@Override
 	public void onLoggedIn() {
-		ParseUser user = AccountController.INSTANCE.getUser();
+		ParseUser user = ParseUser.getCurrentUser();
 		if (user != null) Toast.makeText(getActivity(),
 				getString(R.string.welcomeback) + " " + user.getUsername(), Toast.LENGTH_SHORT).show();
 			
@@ -93,7 +92,7 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 	}
 	
 	private void showLoginView() {
-		ParseUser user = AccountController.INSTANCE.getUser();
+		ParseUser user = ParseUser.getCurrentUser();
 		
 		if(user != null) {
 			mUsername.setText(user.getUsername());
@@ -102,8 +101,8 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 			mEmail.setVisibility(View.VISIBLE);
 		}	
 		
-		mToggleLogin.setText(getString(R.string.logout));
-		mToggleLogin.setBootstrapType("warning");
+		mBtnToggleLogin.setText(getString(R.string.logout));
+		mBtnToggleLogin.setBootstrapType("warning");
 	}
 	
 	@Override

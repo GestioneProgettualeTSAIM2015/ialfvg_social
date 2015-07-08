@@ -27,7 +27,7 @@
         android:layout_alignParentTop="true"
         android:text="@string/app_name"
         bootstrap:bb_roundedCorners="true"
-        bootstrap:bb_type="primary" />
+        bootstrap:bb_type="info" />
     
     <ListView 
         android:id="@+id/listMyProfile"

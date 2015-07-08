@@ -1,34 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">EsempioIAL</string>
-    
+    <string name="app_name">Basic Tweet</string>
     <string name="parse_app_id">EY5SPQ7hN7OedgqAXbwWTDS8tMSSya70efXfWBjH</string>
     <string name="parse_client_key">xNqQo3MOghCp93e9XE586iaDZHjOQOAWPXVVfnMs</string>
-    
     <string name="action_settings">Settings</string>
     <string name="error_loading_data">Error loading data</string>
     <string name="retry">Retry</string>
     <string name="Timeline">Timeline</string>
     <string name="Users">Users</string>
     <string name="MyProfile">My profile</string>
-    
     <string name="login">Login</string>
     <string name="registration">Registration</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
-    
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="logout">Logout</string>
-    
     <string name="welcomeback">Welcome back</string>
     <string name="byebye">bye-bye</string>
-    
-    <string name="tweet">What\'s on your mind? :v</string>
+    <string name="tweet">What\'s on your mind?</string>
     <string name="confirm_tweet">Tweet!</string>
-    <string name="cancel_tweet">Cancel</string>
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
     
     <string name="enable_notification">Enable Notification</string>
     <string name="follow_switch">follow</string>

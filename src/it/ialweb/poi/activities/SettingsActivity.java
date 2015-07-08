@@ -1,5 +1,8 @@
-package it.ialweb.poi;
+package it.ialweb.poi.activities;
 
+import it.ialweb.poi.R;
+import it.ialweb.poi.R.id;
+import it.ialweb.poi.R.layout;
 import it.ialweb.poi.core.Settings;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
