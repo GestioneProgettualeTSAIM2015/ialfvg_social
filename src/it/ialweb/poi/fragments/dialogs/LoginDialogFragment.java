@@ -169,7 +169,7 @@ import com.parse.SignUpCallback;
 		toggleLoading(true);
 
 		if (isRegister)
-			AccountController.INSTANCE.register(username, password, email, new SignUpCallback() {
+			AccountController.register(username, password, email, new SignUpCallback() {
 				@Override
 				public void done(ParseException pe) {
 					if (pe != null) {
@@ -183,7 +183,7 @@ import com.parse.SignUpCallback;
 				}
 			});
 		else
-			AccountController.INSTANCE.logIn(username, password, new LogInCallback() {
+			AccountController.logIn(username, password, new LogInCallback() {
 				@Override
 				public void done(ParseUser user, ParseException pe) {
 					if (pe != null) {
