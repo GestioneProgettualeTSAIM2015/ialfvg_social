@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements ISendTweetDialogF
 					LoginDialogFragment dialog = LoginDialogFragment.newInstance();
 					dialog.show(getSupportFragmentManager(), LoginDialogFragment.TAG);
 				}
+
 			}
 		});
 		
