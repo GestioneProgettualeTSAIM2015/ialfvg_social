@@ -13,5 +13,6 @@
     <color name="dark_green">#4b7311</color>
     
     <color name="gray">#aaaaaa</color>
+    <color name="dark_gray">#777777</color>
 
 </resources>

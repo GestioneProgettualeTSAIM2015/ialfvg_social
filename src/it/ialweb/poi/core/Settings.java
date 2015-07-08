@@ -2,7 +2,6 @@ package it.ialweb.poi.core;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 public class Settings {

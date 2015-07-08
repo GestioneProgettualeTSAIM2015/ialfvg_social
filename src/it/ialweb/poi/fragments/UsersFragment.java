@@ -1,27 +1,19 @@
 package it.ialweb.poi.fragments;
 
-import java.util.List;
-
 import it.ialweb.poi.R;
-import it.ialweb.poi.core.AccountController;
-import it.ialweb.poi.core.TweetsListAdapter;
-import it.ialweb.poi.core.UsersListAdapter;
-import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
-import it.ialweb.poi.fragments.dialogs.LoginDialogFragment.ILoginDialogFragment;
+import it.ialweb.poi.activities.UserProfileActivity;
+import it.ialweb.poi.adapters.UsersListAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -47,16 +39,13 @@ public class UsersFragment extends Fragment{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				String userId = ((TextView)view.findViewById(R.id.userID)).getText().toString();
-				ParseQuery<ParseUser> query = ParseUser.getQuery();
-				try {
-					ParseUser user = query.get(userId);
-					// TODO start activity user
-				} catch (ParseException e) {
-					
-					e.printStackTrace();
-				}
-					
+				
+				String userId = ((TextView) view.findViewById(R.id.userID)).getText().toString();
+				if (userId != null) {
+					Intent myIntent = new Intent(getActivity(), UserProfileActivity.class);
+					myIntent.putExtra(UserProfileActivity.USER_ID_TAG, userId);
+					getActivity().startActivity(myIntent);
+				}	
 			}
 		});
 		

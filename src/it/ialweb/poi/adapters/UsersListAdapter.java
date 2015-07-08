@@ -1,9 +1,8 @@
-package it.ialweb.poi.core;
+package it.ialweb.poi.adapters;
 
 import it.ialweb.poi.R;
 import android.content.Context;
 import android.support.v7.widget.SwitchCompat;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -19,6 +18,7 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 
 	public UsersListAdapter(Context context) {
 		super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public ParseQuery create() {
 				ParseQuery<ParseUser> query = ParseUser.getQuery();
 				return query;
@@ -44,7 +44,7 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 			holder = (UserViewHolder) v.getTag();
 		}
 		
-		holder.userIdTextView.setText(object.getString("objectId"));
+		holder.userIdTextView.setText(object.getObjectId());
 		holder.ownerTextView.setText(object.getString("username"));
 		holder.follow.setActivated(false);
 		

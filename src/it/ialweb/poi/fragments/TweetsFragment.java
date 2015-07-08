@@ -1,7 +1,7 @@
 package it.ialweb.poi.fragments;
 
 import it.ialweb.poi.R;
-import it.ialweb.poi.core.TweetsListAdapter;
+import it.ialweb.poi.adapters.TweetsListAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,6 +18,7 @@ public class TweetsFragment extends Fragment {
 	}
 
 	private ListView mList;
+	@SuppressWarnings("unused")
 	private ProgressBar mProgressBar;
 	
 	@Override

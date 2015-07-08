@@ -1,9 +1,7 @@
-package it.ialweb.poi.core;
+package it.ialweb.poi.adapters;
 
 import it.ialweb.poi.R;
-import it.ialweb.poi.core.UsersListAdapter.UserViewHolder;
 import android.content.Context;
-import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -19,6 +17,7 @@ public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 
 	public TweetsListAdapter(Context context, final boolean isMyProfile) {
 		super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public ParseQuery create() {
 				ParseUser user = ParseUser.getCurrentUser();
 				ParseQuery query = new ParseQuery("Tweets");
@@ -55,8 +54,14 @@ public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 			holder.icon.setBackgroundResource(R.drawable.tweet_default);
 		}
 
-		ParseUser creator = object.getParseUser("createdBy");
-		holder.ownerTextView.setText(creator.getUsername());
+		ParseUser creator = null;
+		try {
+			creator = object.getParseUser("createdBy");
+			holder.ownerTextView.setText(creator.getUsername());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			android.util.Log.d("aaa", ex.getMessage());
+		}
 
 		holder.messageView.setText(object.getString("message"));
 		return v;

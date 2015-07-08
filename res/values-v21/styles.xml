@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        
+        <item name="android:windowContentTransitions" tools:targetApi="21">true</item>
+        
+        <!-- Switch colors -->
+        <!-- Active thumb color & Active track color(30% transparency) -->
+		<!--<item name="colorControlActivated">@color/primary</item>-->
+		<!-- Inactive thumb color -->
+		<item name="colorSwitchThumbNormal">@color/primary_dark</item>
+		<!-- Inactive track color(30% transparency) -->
+		<item name="android:colorForeground">@color/primary</item>
+    </style>
+
+</resources>

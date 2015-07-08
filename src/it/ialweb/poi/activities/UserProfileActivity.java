@@ -14,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 public class UserProfileActivity extends AppCompatActivity implements ILoginDialogFragment {
 	
@@ -55,10 +58,18 @@ public class UserProfileActivity extends AppCompatActivity implements ILoginDial
 		
 		Intent intent = getIntent();
 		if (intent != null) {
-			mUsername.setText(intent.getStringExtra(USERNAME_TAG));
-			mEmail.setText(intent.getStringExtra(EMAIL_TAG));
 			mUserId = intent.getStringExtra(USER_ID_TAG);
 			isFollowed = intent.getBooleanExtra(IS_FOLLOWED_TAG, false);
+			
+			ParseQuery<ParseUser> query = ParseUser.getQuery();
+			try {
+				ParseUser user = query.get(mUserId);
+				
+				mUsername.setText(user.getUsername());
+				mEmail.setText(user.getEmail());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		if (savedInstanceState != null) {
