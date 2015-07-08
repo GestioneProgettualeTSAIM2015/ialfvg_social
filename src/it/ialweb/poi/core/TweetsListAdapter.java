@@ -1,7 +1,9 @@
 package it.ialweb.poi.core;
 
 import it.ialweb.poi.R;
+import it.ialweb.poi.core.UsersListAdapter.UserViewHolder;
 import android.content.Context;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -30,31 +32,39 @@ public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 
 	@Override
 	public View getItemView(ParseObject object, View v, ViewGroup parent) {
+		super.getItemView(object, v, parent);
+		
+		TweetViewHolder holder;
+		
 		if (v == null) {
 			v = View.inflate(getContext(), R.layout.tweet_row, null);
+			holder = new TweetViewHolder();
+			holder.icon = (ParseImageView) v.findViewById(R.id.tweetIcon);
+			holder.ownerTextView = (TextView) v.findViewById(R.id.tweetOwner);
+			holder.messageView = (TextView) v.findViewById(R.id.tweetText);
+			v.setTag(holder);
+		} else {
+			holder = (TweetViewHolder) v.getTag();
 		}
 
-		super.getItemView(object, v, parent);
-
-		// Add and download the image
-		ParseImageView icon = (ParseImageView) v.findViewById(R.id.tweetIcon);
 		ParseFile imageFile = object.getParseFile("image");
 		if (imageFile != null) {
-			icon.setParseFile(imageFile);
-			icon.loadInBackground();
+			holder.icon.setParseFile(imageFile);
+			holder.icon.loadInBackground();
 		} else {
-			icon.setBackgroundResource(R.drawable.tweet_default);
+			holder.icon.setBackgroundResource(R.drawable.tweet_default);
 		}
 
-		// Add the author of message
-		TextView ownerTextView = (TextView) v.findViewById(R.id.tweetOwner);
 		ParseUser creator = object.getParseUser("createdBy");
-		ownerTextView.setText(creator.getUsername());
+		holder.ownerTextView.setText(creator.getUsername());
 
-		// Add the message
-		TextView messageView = (TextView) v.findViewById(R.id.tweetText);
-		messageView.setText(object.getString("message"));
+		holder.messageView.setText(object.getString("message"));
 		return v;
 	}
-
+	
+	static class TweetViewHolder {
+		ParseImageView icon;
+		TextView ownerTextView;
+		TextView messageView;
+	}
 }
