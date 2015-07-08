@@ -4,6 +4,8 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import it.ialweb.poi.fragments.MyProfileFragment;
+import it.ialweb.poi.fragments.TweetsFragment;
+import it.ialweb.poi.fragments.UsersFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
 import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment;
 import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment.ISendTweetDialogFragment;
@@ -55,12 +57,14 @@ public class MainActivity extends AppCompatActivity implements ISendTweetDialogF
 			@Override
 			public Fragment getItem(int position) {
 				switch (position) {
+				case 0:
+					return TweetsFragment.newInstance();
+				case 1:
+					return UsersFragment.newInstance();
 				case 2:
 					return MyProfileFragment.newInstance();
-
-				default:
-					return new PlaceHolder();
 				}
+				return null;
 			}
 
 			@Override
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements ISendTweetDialogF
 				return getResources().getString(titles[position]);
 			}
 		};
+		viewPager.setOffscreenPageLimit(2);
 		viewPager.setAdapter(adapter);
 
 		tabLayout.setupWithViewPager(viewPager);
@@ -88,39 +93,12 @@ public class MainActivity extends AppCompatActivity implements ISendTweetDialogF
 		});
 	}
 
-	public static class PlaceHolder extends Fragment {
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			RecyclerView recyclerView = new RecyclerView(getActivity());
-			recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-			recyclerView.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-				@Override
-				public int getItemCount() {
-					return 30;
-				}
-
-				@Override
-				public void onBindViewHolder(ViewHolder holder, int position) {
-					((TextView) holder.itemView).setText("Item " + position);
-				}
-
-				@Override
-				public ViewHolder onCreateViewHolder(ViewGroup parent, int type) {
-					LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-					View view = layoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
-					return new ViewHolder(view) {
-					};
-				}
-			});
-			return recyclerView;
-		}
-	}
-
 	@Override
 	public void onSendTweet(String text) {
-		ParseObject tweet = new ParseObject("Tweets");
+		ParseUser user = ParseUser.getCurrentUser();
+		ParseObject tweet = new ParseObject("TweetTest");
 		tweet.put("message", text);
-		//			tweet.put("ownerId", user.getObjectId());
+		tweet.put("ownerId", user.getObjectId());
 		tweet.saveInBackground();
 		Snackbar.make(findViewById(R.id.coordinator), "sent: " + text, Snackbar.LENGTH_LONG).show();
 	}
