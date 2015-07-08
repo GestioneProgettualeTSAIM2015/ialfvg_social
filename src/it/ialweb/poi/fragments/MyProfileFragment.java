@@ -3,6 +3,7 @@ package it.ialweb.poi.fragments;
 import it.ialweb.poi.R;
 import it.ialweb.poi.core.AccountController;
 import it.ialweb.poi.core.TweetsListAdapter;
+import it.ialweb.poi.fragments.dialogs.ListDialogFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment.ILoginDialogFragment;
 import android.os.Bundle;
@@ -20,6 +21,10 @@ import com.parse.ParseUser;
 
 public class MyProfileFragment extends Fragment implements ILoginDialogFragment {
 	
+	private static final String TYPE_FOLLOWER = "TYPE_FOLLOWER";
+	private static final String TYPE_FOLLOWING = "TYPE_FOLLOWING";
+	private static final String TYPE_FAVORITE = "TYPE_FAVORITE";
+	
 	public static MyProfileFragment newInstance() {
 		MyProfileFragment myProfileFragment = new MyProfileFragment();
 		return myProfileFragment;
@@ -29,6 +34,9 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 	private TextView mUsername;
 	private TextView mEmail;
 	private ListView mList;
+	private BootstrapButton mFollower;
+	private BootstrapButton mFollowing;
+	private BootstrapButton mFavorite;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,6 +45,9 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 		
 		mToggleLogin = (BootstrapButton) view.findViewById(R.id.btnToggle);
+		mFollower = (BootstrapButton) view.findViewById(R.id.btnFollower);
+		mFollowing = (BootstrapButton) view.findViewById(R.id.btnFollowing);
+		mFavorite = (BootstrapButton) view.findViewById(R.id.btnFavorite);
 		mUsername = (TextView) view.findViewById(R.id.tvUsername);
 		mEmail = (TextView) view.findViewById(R.id.tvEmail);
 		mList = (ListView) view.findViewById(R.id.listMyProfile);
@@ -56,6 +67,27 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 					onLoggedOut();
 					Toast.makeText(getActivity(), getString(R.string.byebye), Toast.LENGTH_SHORT).show();
 				} else showLoginDialog();
+			}
+		});
+		
+		mFollower.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showListDialog(TYPE_FOLLOWER);
+			}
+		});
+		
+		mFollowing.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showListDialog(TYPE_FOLLOWING);
+			}
+		});
+		
+		mFavorite.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showListDialog(TYPE_FAVORITE);
 			}
 		});
 		
@@ -79,7 +111,13 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 	private void showLoginDialog() {
 		LoginDialogFragment dialog = LoginDialogFragment.newInstance();
 		dialog.setTargetFragment(this, 0);
-		dialog.show(getActivity().getSupportFragmentManager(),	LoginDialogFragment.TAG);
+		dialog.show(getActivity().getSupportFragmentManager(), LoginDialogFragment.TAG);
+	}
+	
+	private void showListDialog(String dialogType) {
+		ListDialogFragment dialog = ListDialogFragment.newInstance(dialogType);
+		dialog.setTargetFragment(this, 0);
+		dialog.show(getActivity().getSupportFragmentManager(), ListDialogFragment.TAG);
 	}
 	
 	@Override

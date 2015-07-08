@@ -32,5 +32,9 @@
     
     <string name="enable_notification">Enable Notification</string>
     <string name="follow_switch">follow</string>
+    
+    <string name="follower">Follower</string>
+    <string name="following">Following</string>
+    <string name="favorite">Favorite</string>
 
 </resources>
