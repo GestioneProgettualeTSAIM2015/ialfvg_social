@@ -2,6 +2,7 @@ package it.ialweb.poi.fragments;
 
 import it.ialweb.poi.R;
 import it.ialweb.poi.core.AccountController;
+import it.ialweb.poi.core.TweetsListAdapter;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment.ILoginDialogFragment;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 	private BootstrapButton mToggleLogin;
 	private TextView mUsername;
 	private TextView mEmail;
+	private ListView mList;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,7 +39,12 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		mToggleLogin = (BootstrapButton) view.findViewById(R.id.btnToggle);
 		mUsername = (TextView) view.findViewById(R.id.tvUsername);
 		mEmail = (TextView) view.findViewById(R.id.tvEmail);
+		mList = (ListView) view.findViewById(R.id.listMyProfile);
 		
+		ParseUser user = ParseUser.getCurrentUser();
+		if (user != null && AccountController.INSTANCE.isLoggedIn())
+			initList();
+
 		if(!AccountController.INSTANCE.isLoggedIn()) onLoggedOut();
 		else showLoginView();
 		
@@ -52,6 +60,13 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		});
 		
 		return view;
+	}
+	
+	private void initList() {
+		TweetsListAdapter adapter = new TweetsListAdapter(getActivity(), true);
+		mList.setVisibility(View.VISIBLE);
+		mList.setAdapter(adapter);
+		adapter.loadObjects();
 	}
 	
 	private void onLoggedOut() {
@@ -74,6 +89,7 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 				getString(R.string.welcomeback) + " " + user.getUsername(), Toast.LENGTH_SHORT).show();
 			
 		showLoginView();
+		initList();
 	}
 	
 	private void showLoginView() {
