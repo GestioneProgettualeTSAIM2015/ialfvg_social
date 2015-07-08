@@ -11,7 +11,7 @@ public class TweetUtils {
 		
 		ParseObject tweet = new ParseObject("Tweets");
 		tweet.put("message", message);
-		tweet.put("ownerId", ParseUser.getCurrentUser().getObjectId());
+		tweet.put("createdBy", ParseUser.getCurrentUser());
 		tweet.saveInBackground();
 		
 		return true;

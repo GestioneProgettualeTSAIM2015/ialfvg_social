@@ -37,6 +37,7 @@ public class TweetsFragment extends Fragment {
 	
 	private void initList() {
 		TweetsListAdapter adapter = new TweetsListAdapter(getActivity(), false);
+		
 		mList.setAdapter(adapter);
 		adapter.loadObjects();
 	}
