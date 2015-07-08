@@ -29,5 +29,7 @@
     <string name="tweet">What\'s on your mind? :v</string>
     <string name="confirm_tweet">Tweet!</string>
     <string name="cancel_tweet">Cancel</string>
+    
+    <string name="enable_notification">Enable Notification</string>
 
 </resources>
