@@ -1,15 +1,23 @@
 package it.ialweb.poi.fragments;
 
+import java.util.List;
+
+import com.parse.ParseQueryAdapter.OnQueryLoadListener;
+import com.parse.ParseObject;
+
 import it.ialweb.poi.R;
 import it.ialweb.poi.adapters.TweetsListAdapter;
 import it.ialweb.poi.core.AccountController;
 import it.ialweb.poi.core.TweetUtils;
+import it.ialweb.poi.core.TweetUtils.ITweetsUtils;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
 import it.ialweb.poi.fragments.dialogs.SendRetweetDialogFragment;
 import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment.ILoginDialogFragment;
+import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment.ISendTweetDialogFragment;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -40,7 +48,10 @@ public class TweetsFragment extends Fragment implements ILoginDialogFragment {
 	
 	private String tweetOwner;
 	private String tweetText;
+	private Bundle mBundle;
+	private String tweetId;
 	private SwipeRefreshLayout swipeLayout;
+	private TweetsListAdapter adapter; 
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,12 +67,7 @@ public class TweetsFragment extends Fragment implements ILoginDialogFragment {
 			@Override
 			public void onRefresh()
 			{
-			    new Handler().postDelayed(new Runnable() {
-			        @Override public void run() {
-			        	android.util.Log.d("REFRESH", "refresh TweetsFragment");
-			            swipeLayout.setRefreshing(false);
-			        }
-			    }, 5000);
+				adapter.loadObjects();
 			}
 		});
 		
@@ -72,13 +78,23 @@ public class TweetsFragment extends Fragment implements ILoginDialogFragment {
 		mList.setOnItemClickListener(new OnItemClickListener()
 		{
 
+
+
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
+						
 				tweetOwner = ((TextView) view.findViewById(R.id.tweetOwner)).getText().toString();
 				tweetText = ((TextView) view.findViewById(R.id.tweetText)).getText().toString();
+				tweetId = ((TextView) view.findViewById(R.id.tweetId)).getText().toString();
+				mBundle = new Bundle();
+				mBundle.putString(SendRetweetDialogFragment.TWEET_OWNER, tweetOwner);
+				mBundle.putString(SendRetweetDialogFragment.TWEET_TEXT, tweetText);
+				mBundle.putString(SendRetweetDialogFragment.TWEET_ID, tweetId);
+				
 				if (AccountController.isLoggedIn()) {
-					SendRetweetDialogFragment retweetDialog = SendRetweetDialogFragment.newInstance(tweetOwner, tweetText);
+					SendRetweetDialogFragment retweetDialog = SendRetweetDialogFragment.newInstance(mBundle);
+					retweetDialog.setTargetFragment(TweetsFragment.this, 0);
 					retweetDialog.show(getChildFragmentManager(), SendTweetDialogFragment.TAG);
 				} else {
 					sendingTweet = true;
@@ -109,7 +125,20 @@ public class TweetsFragment extends Fragment implements ILoginDialogFragment {
 	}
 	
 	private void initList() {
-		TweetsListAdapter adapter = new TweetsListAdapter(getActivity(), TweetUtils.TYPE_ALL_TWEETS);
+		adapter = new TweetsListAdapter(getActivity(), TweetUtils.TYPE_ALL_TWEETS);
+		
+		adapter.addOnQueryLoadListener(new OnQueryLoadListener<ParseObject>() {
+
+			@Override
+			public void onLoaded(List<ParseObject> arg0, Exception arg1) {
+				 swipeLayout.setRefreshing(false);
+			}
+
+			@Override
+			public void onLoading() {
+				
+			}
+		});
 		
 		mList.setAdapter(adapter);
 		adapter.loadObjects();
@@ -126,7 +155,8 @@ public class TweetsFragment extends Fragment implements ILoginDialogFragment {
 	public void onLoggedIn() {
 		if (sendingTweet) {
 			sendingTweet = false;
-			SendRetweetDialogFragment retweetDialog = SendRetweetDialogFragment.newInstance(tweetOwner, tweetText);
+			SendRetweetDialogFragment retweetDialog = SendRetweetDialogFragment.newInstance(mBundle);
+			retweetDialog.setTargetFragment(TweetsFragment.this, 0);
 			retweetDialog.show(getChildFragmentManager(), SendTweetDialogFragment.TAG);
 		}
 	}

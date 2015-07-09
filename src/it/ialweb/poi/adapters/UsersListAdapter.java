@@ -8,9 +8,8 @@ import it.ialweb.poi.core.TweetUtils;
 import android.content.Context;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,11 +81,12 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 				}
 			});
 			
-			holder.follow.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			holder.follow.setOnClickListener(new OnClickListener() {
 				
 				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
+				public void onClick(View v) {
+					if (holder.follow.isChecked()) {
 						TweetUtils.follow(object, new TweetUtils.ITweetsUtils() {
 							
 							@Override
@@ -110,9 +110,9 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 						}); 
 					}
 					me.saveInBackground();
-					
 				}
 			});
+			
 		} else {
 			holder.follow.setVisibility(View.INVISIBLE);
 		}

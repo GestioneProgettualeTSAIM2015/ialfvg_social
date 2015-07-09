@@ -44,6 +44,7 @@ public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 		if (v == null) {
 			v = View.inflate(getContext(), R.layout.tweet_row, null);
 			holder = new TweetViewHolder();
+			holder.idTextView = (TextView) v.findViewById(R.id.tweetId);
 			holder.icon = (ParseImageView) v.findViewById(R.id.tweetIcon);
 			holder.ownerTextView = (TextView) v.findViewById(R.id.tweetOwner);
 			holder.messageView = (TextView) v.findViewById(R.id.tweetText);
@@ -52,6 +53,7 @@ public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 			holder = (TweetViewHolder) v.getTag();
 		}
 
+		holder.idTextView.setText(object.getObjectId());
 		ParseFile imageFile = object.getParseFile("image");
 		if (imageFile != null) {
 			holder.icon.setParseFile(imageFile);
@@ -76,6 +78,7 @@ public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 	static class TweetViewHolder {
 		ParseImageView icon;
 		TextView ownerTextView;
+		TextView idTextView;
 		TextView messageView;
 	}
 }

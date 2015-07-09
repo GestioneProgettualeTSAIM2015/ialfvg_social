@@ -1,7 +1,12 @@
 package it.ialweb.poi.core;
 
-import android.util.Log;
+import java.util.List;
 
+import android.util.Log;
+import android.widget.Toast;
+
+import com.bumptech.glide.util.Util;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -21,6 +26,7 @@ public class TweetUtils {
 	public interface ITweetsUtils {
 		void onResponseResult(boolean result);
 	}
+	
 
 	public static boolean sendTweet(String message) {
 		
@@ -34,9 +40,6 @@ public class TweetUtils {
 		return true;
 	}
 	
-	public static ParseUser getUserById(String userId) {
-		ParseUser user;
-	
 	public static boolean sendRetweet(String message) {
 		
 		if (!AccountController.isLoggedIn()) return false;
@@ -49,7 +52,8 @@ public class TweetUtils {
 		return true;
 	}
 	
-		
+	public static ParseUser getUserById(String userId) {
+		ParseUser user;
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		try {
 			user = query.get(userId);
@@ -59,6 +63,23 @@ public class TweetUtils {
 		}
 		
 		return user;
+	}
+	public static void addFavorite(String tweetId) {
+		if (!AccountController.isLoggedIn()) return;
+		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Tweets");
+		query.whereEqualTo("objectId", tweetId);
+		query.findInBackground(new FindCallback<ParseObject>() {
+			
+			@Override
+			public void done(List<ParseObject> list, ParseException e) {
+				if (list.size() > 0) {
+					ParseUser currentUser = ParseUser.getCurrentUser();
+					ParseRelation<ParseObject> tweetRelation = currentUser.getRelation("favorites");
+					tweetRelation.add(list.get(0));
+					currentUser.saveInBackground();
+				}
+			}
+		});
 	}
 	
 	
@@ -72,6 +93,7 @@ public class TweetUtils {
 			
 			@Override
 			public void done(ParseException e) {
+				Log.d("TWEET UTILS", "followed");
 				if (listener != null) listener.onResponseResult(e == null);
 				if (e != null) Log.e("TWEET UTILS", e.getMessage());
 			}
@@ -90,21 +112,12 @@ public class TweetUtils {
 			
 			@Override
 			public void done(ParseException e) {
+				Log.d("TWEET UTILS", "unfollowed");
 				if (listener != null) listener.onResponseResult(e == null);
 				if (e != null) Log.e("TWEET UTILS", e.getMessage());
 			}
 		});
 
-		return true;
-	}
-	
-	public static boolean addFavorite(ParseObject tweet) {
-		if (!AccountController.isLoggedIn()) return false;
-		
-		ParseUser currentUser = ParseUser.getCurrentUser();
-		ParseRelation<ParseObject> tweetRelation = currentUser.getRelation("favorites");
-		tweetRelation.add(tweet);
-		currentUser.saveInBackground();
 		return true;
 	}
 	
@@ -145,8 +158,6 @@ public class TweetUtils {
 	}
 
 	public static ParseQuery<ParseObject> getAllTweetsQuery() {
-		if (!AccountController.isLoggedIn()) return null;
-		
 		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Tweets");
 		query.orderByDescending("updatedAt");
 		return query;

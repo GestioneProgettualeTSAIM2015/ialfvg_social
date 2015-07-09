@@ -1,5 +1,7 @@
 package it.ialweb.poi.fragments;
 
+import java.util.List;
+
 import it.ialweb.poi.R;
 import it.ialweb.poi.activities.UserProfileActivity;
 import it.ialweb.poi.adapters.UsersListAdapter;
@@ -21,8 +23,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 
 public class UsersFragment extends Fragment{
 	
@@ -33,6 +37,8 @@ public class UsersFragment extends Fragment{
 	
 	private ListView mList;
 	private SwipeRefreshLayout swipeLayout;
+	
+	private UsersListAdapter adapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,12 +54,7 @@ public class UsersFragment extends Fragment{
 			@Override
 			public void onRefresh()
 			{
-			    new Handler().postDelayed(new Runnable() {
-			        @Override public void run() {
-			        	android.util.Log.d("REFRESH", "refresh UsersFragment");
-			            swipeLayout.setRefreshing(false);
-			        }
-			    }, 5000);
+				adapter.loadObjects();
 			}
 		});
 		
@@ -91,7 +92,20 @@ public class UsersFragment extends Fragment{
 	}
 	
 	private void initList() {
-		UsersListAdapter adapter = new UsersListAdapter(getActivity(), TweetUtils.TYPE_ALL_USERS);
+		adapter = new UsersListAdapter(getActivity(), TweetUtils.TYPE_ALL_USERS);
+		
+		adapter.addOnQueryLoadListener(new OnQueryLoadListener<ParseObject>() {
+
+			@Override
+			public void onLoaded(List<ParseObject> arg0, Exception arg1) {
+				 swipeLayout.setRefreshing(false);
+			}
+
+			@Override
+			public void onLoading() {
+				
+			}
+		});
 		mList.setAdapter(adapter);
 		adapter.loadObjects();
 	}
