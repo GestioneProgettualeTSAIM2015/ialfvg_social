@@ -17,6 +17,18 @@ public class TweetUtils {
 		return true;
 	}
 	
+	public static boolean sendRetweet(String message) {
+		
+		if (!AccountController.isLoggedIn()) return false;
+		
+		ParseObject tweet = new ParseObject("Tweets");
+		tweet.put("message", message);
+		tweet.put("createdBy", ParseUser.getCurrentUser());
+		tweet.saveInBackground();
+		
+		return true;
+	}
+	
 	public static boolean follow(String followedUserId) {
 		
 		if (!AccountController.isLoggedIn()) return false;

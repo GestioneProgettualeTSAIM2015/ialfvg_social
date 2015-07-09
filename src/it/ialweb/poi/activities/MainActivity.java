@@ -8,6 +8,7 @@ import it.ialweb.poi.fragments.TweetsFragment;
 import it.ialweb.poi.fragments.UsersFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment.ILoginDialogFragment;
+import it.ialweb.poi.fragments.dialogs.SendRetweetDialogFragment.ISendRetweetDialogFragment;
 import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment;
 import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment.ISendTweetDialogFragment;
 import android.content.Intent;
@@ -26,7 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class MainActivity extends AppCompatActivity implements ISendTweetDialogFragment, ILoginDialogFragment {
+public class MainActivity extends AppCompatActivity implements ISendTweetDialogFragment, ISendRetweetDialogFragment, ILoginDialogFragment {
 
 	private final static String SENDING_TWEET_TAG = "sendingtweettag";
 	
@@ -124,6 +125,13 @@ public class MainActivity extends AppCompatActivity implements ISendTweetDialogF
 		Snackbar.make(findViewById(R.id.coordinator), "sent: " + message, Snackbar.LENGTH_LONG).show();
 	}
 	
+	@Override
+	public void onSendRetweet(String message) {
+		TweetUtils.sendRetweet(message);
+		Snackbar.make(findViewById(R.id.coordinator), "sent: " + message, Snackbar.LENGTH_LONG).show();
+	}
+	
+	@Override
 	public void onLoggedIn() {
 		if (sendingTweet) {
 			sendingTweet = false;

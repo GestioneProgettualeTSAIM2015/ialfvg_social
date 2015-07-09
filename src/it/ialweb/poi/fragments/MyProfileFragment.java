@@ -105,6 +105,10 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 		mEmail.setVisibility(View.GONE);
 		mBtnToggleLogin.setText(getString(R.string.login));
 		mBtnToggleLogin.setBootstrapType("info");
+		mFollower.setVisibility(View.GONE);
+		mFollowing.setVisibility(View.GONE);
+		mFavorite.setVisibility(View.GONE);
+		mList.setVisibility(View.GONE);
 	}
 	
 	private void showLoginDialog() {
@@ -137,6 +141,10 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 			mEmail.setText(user.getEmail());
 			mUsername.setVisibility(View.VISIBLE);
 			mEmail.setVisibility(View.VISIBLE);
+			mFollower.setVisibility(View.VISIBLE);
+			mFollowing.setVisibility(View.VISIBLE);
+			mFavorite.setVisibility(View.VISIBLE);
+			mList.setVisibility(View.VISIBLE);
 		}	
 		
 		mBtnToggleLogin.setText(getString(R.string.logout));
