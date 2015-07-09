@@ -6,6 +6,8 @@ import it.ialweb.poi.R;
 import it.ialweb.poi.core.AccountController;
 import it.ialweb.poi.core.TweetUtils;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,17 +27,17 @@ import com.parse.ParseUser;
 
 public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 
-	public UsersListAdapter(Context context, final String dialogType) {
+	public UsersListAdapter(final Context context, final String dialogType) {
 		super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public ParseQuery create() {
 				switch (dialogType) {
 					case TweetUtils.TYPE_FOLLOWER:
-						return TweetUtils.getFollowersQuery();
+						return TweetUtils.getFollowersQuery(context);
 					case TweetUtils.TYPE_FOLLOWING:
-						return TweetUtils.getFollowingQuery();
+						return TweetUtils.getFollowingQuery(context);
 					case TweetUtils.TYPE_ALL_USERS:
-						return TweetUtils.getAllUserQuery();
+						return TweetUtils.getAllUserQuery(context);
 					default:
 						return null;
 				}
@@ -60,7 +62,7 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 		} else {
 			holder = (UserViewHolder) v.getTag();
 		}
-		
+		object.pinInBackground();
 		holder.userIdTextView.setText(object.getObjectId());
 		holder.ownerTextView.setText(object.getString("username"));
 		
@@ -134,5 +136,13 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 		TextView ownerTextView;
 		SwitchCompat follow;
 	}
+	
+	private static boolean isNetworkAvailable(Context context) {
+		final Context c = context;
+		ConnectivityManager connectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null; 
+	}
+	
 
 }

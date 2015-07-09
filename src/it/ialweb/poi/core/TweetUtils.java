@@ -2,6 +2,9 @@ package it.ialweb.poi.core;
 
 import java.util.List;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,8 +38,9 @@ public class TweetUtils {
 		ParseObject tweet = new ParseObject("Tweets");
 		tweet.put("message", message);
 		tweet.put("createdBy", ParseUser.getCurrentUser());
-		tweet.saveInBackground();
-		
+		//tweet.saveInBackground();
+		tweet.pinInBackground();
+		tweet.saveEventually();
 		return true;
 	}
 	
@@ -131,49 +135,58 @@ public class TweetUtils {
 		return true;
 	}
 	
-	public static ParseQuery<ParseObject> getFollowingQuery() {
+	public static ParseQuery<ParseObject> getFollowingQuery(Context context) {
 		if (!AccountController.isLoggedIn()) return null;
 		
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		ParseRelation<ParseObject> followRelation = currentUser.getRelation("follows");
-		return followRelation.getQuery();
-
+		ParseQuery<ParseObject> query =  followRelation.getQuery();
+		return isNetworkAvailable(context) ? query : query.fromLocalDatastore();
 	}
 	
-	public static ParseQuery<ParseObject> getFollowersQuery() {
+	public static ParseQuery<ParseObject> getFollowersQuery(Context context) {
 		if (!AccountController.isLoggedIn()) return null;
 		
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		ParseRelation<ParseObject> followRelation = currentUser.getRelation("followedBy");
-		return followRelation.getQuery();
-
+		ParseQuery<ParseObject> query =  followRelation.getQuery();
+		return isNetworkAvailable(context) ? query : query.fromLocalDatastore();
 	}
 
-	public static ParseQuery<ParseObject> getFavoritesQuery() {
+	public static ParseQuery<ParseObject> getFavoritesQuery(Context context) {
 		if (!AccountController.isLoggedIn()) return null;
 		
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		ParseRelation<ParseObject> favoriteRelation = currentUser.getRelation("favorites");
-		return favoriteRelation.getQuery();
+		ParseQuery<ParseObject> query = favoriteRelation.getQuery();
+		return isNetworkAvailable(context) ? query : query.fromLocalDatastore();
 	}
 
-	public static ParseQuery<ParseObject> getAllTweetsQuery() {
+	public static ParseQuery<ParseObject> getAllTweetsQuery(Context context) {
 		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Tweets");
 		query.orderByDescending("updatedAt");
-		return query;
+		return isNetworkAvailable(context) ? query : query.fromLocalDatastore();
 	}
 
-	public static ParseQuery<ParseObject> getMineTweetsQuery() {
+	public static ParseQuery<ParseObject> getMineTweetsQuery(Context context) {
 		if (!AccountController.isLoggedIn()) return null;
 		
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Tweets");
 		query.orderByDescending("updatedAt");
 		query.whereEqualTo("createdBy", currentUser);
-		return query;
+		return isNetworkAvailable(context) ? query : query.fromLocalDatastore();
 	}
 
-	public static ParseQuery<ParseUser> getAllUserQuery() {
-		return ParseUser.getQuery();
+	public static ParseQuery<ParseUser> getAllUserQuery(Context context) {
+		ParseQuery<ParseUser> query = ParseUser.getQuery();
+		return isNetworkAvailable(context) ? query : query.fromLocalDatastore();
+	}
+	
+	private static boolean isNetworkAvailable(Context context) {
+		final Context c = context;
+		ConnectivityManager connectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null; 
 	}
 }

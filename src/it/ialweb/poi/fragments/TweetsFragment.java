@@ -160,4 +160,5 @@ public class TweetsFragment extends Fragment implements ILoginDialogFragment {
 			retweetDialog.show(getChildFragmentManager(), SendTweetDialogFragment.TAG);
 		}
 	}
+	
 }
