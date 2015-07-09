@@ -22,6 +22,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -161,7 +162,9 @@ import com.parse.SignUpCallback;
 				@Override
 				public void done(ParseException pe) {
 					if (pe != null) {
-						Log.i(TAG, "Register failed: " + pe.getMessage());
+						String message = "Login failed: " + pe.getMessage();
+						Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+						Log.i(TAG, message);
 						toggleLoading(false);
 					}
 					else {
@@ -175,7 +178,9 @@ import com.parse.SignUpCallback;
 				@Override
 				public void done(ParseUser user, ParseException pe) {
 					if (pe != null) {
-						Log.i(TAG, "Login failed: " + pe.getMessage());
+						String message = "Login failed: " + pe.getMessage();
+						Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+						Log.i(TAG, message);
 						toggleLoading(false);
 					}
 					else {
