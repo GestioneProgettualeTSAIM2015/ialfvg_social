@@ -1,12 +1,18 @@
 package it.ialweb.poi.fragments.dialogs;
 
+import com.parse.ParseObject;
+import com.parse.ParseQueryAdapter;
+
 import it.ialweb.poi.R;
-import it.ialweb.poi.adapters.ListAdapter;
+import it.ialweb.poi.adapters.TweetsListAdapter;
+import it.ialweb.poi.adapters.UsersListAdapter;
+import it.ialweb.poi.core.TweetUtils;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 public class ListDialogFragment extends DialogFragment
@@ -40,9 +46,20 @@ public class ListDialogFragment extends DialogFragment
         return builder.create();
     }
 
-	private void populateList(String type) {	
-		ListAdapter adapter = new ListAdapter(getActivity(), false, type);
-		mList.setAdapter(adapter);
-		adapter.loadObjects();
+	private void populateList(String type) {
+		ParseQueryAdapter<ParseObject> adapter = null;
+		switch (type) {
+		case TweetUtils.TYPE_FAVORITE_TWEETS:
+			adapter = new TweetsListAdapter(getActivity(), type);
+			break;
+		case TweetUtils.TYPE_FOLLOWER:
+		case TweetUtils.TYPE_FOLLOWING:
+			adapter = new UsersListAdapter(getActivity(), type);
+			break;
+		}
+		if (adapter != null) {
+			mList.setAdapter(adapter);
+			adapter.loadObjects();
+		}
 	}
 }

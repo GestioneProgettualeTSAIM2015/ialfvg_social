@@ -3,6 +3,7 @@ package it.ialweb.poi.fragments;
 import it.ialweb.poi.R;
 import it.ialweb.poi.activities.UserProfileActivity;
 import it.ialweb.poi.adapters.UsersListAdapter;
+import it.ialweb.poi.core.TweetUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -55,7 +56,7 @@ public class UsersFragment extends Fragment{
 	}
 	
 	private void initList() {
-		UsersListAdapter adapter = new UsersListAdapter(getActivity());
+		UsersListAdapter adapter = new UsersListAdapter(getActivity(), TweetUtils.TYPE_ALL_USERS);
 		mList.setAdapter(adapter);
 		adapter.loadObjects();
 	}

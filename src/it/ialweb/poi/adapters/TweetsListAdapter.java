@@ -1,6 +1,7 @@
 package it.ialweb.poi.adapters;
 
 import it.ialweb.poi.R;
+import it.ialweb.poi.core.TweetUtils;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +16,21 @@ import com.parse.ParseUser;
 
 public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 
-	public TweetsListAdapter(Context context, final boolean isMyProfile) {
+
+	public TweetsListAdapter(Context context, final String dialogType) {
 		super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public ParseQuery create() {
-				ParseUser user = ParseUser.getCurrentUser();
-				ParseQuery query = new ParseQuery("Tweets");
-				query.orderByDescending("updatedAt");
-				if (user != null && isMyProfile)
-					query.whereEqualTo("createdBy", user);
-				return query;
+				switch (dialogType) {
+					case TweetUtils.TYPE_ALL_TWEETS:
+						return TweetUtils.getAllTweetsQuery();
+					case TweetUtils.TYPE_MINE_TWEETS:
+						return TweetUtils.getMineTweetsQuery();
+					case TweetUtils.TYPE_FAVORITE_TWEETS:
+						return TweetUtils.getFavoritesQuery();
+					default:
+						return null;
+				}
 			}
 		});
 	}

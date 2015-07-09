@@ -2,6 +2,7 @@ package it.ialweb.poi.fragments;
 
 import it.ialweb.poi.R;
 import it.ialweb.poi.adapters.TweetsListAdapter;
+import it.ialweb.poi.core.TweetUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -37,7 +38,7 @@ public class TweetsFragment extends Fragment {
 	}
 	
 	private void initList() {
-		TweetsListAdapter adapter = new TweetsListAdapter(getActivity(), false);
+		TweetsListAdapter adapter = new TweetsListAdapter(getActivity(), TweetUtils.TYPE_ALL_TWEETS);
 		
 		mList.setAdapter(adapter);
 		adapter.loadObjects();

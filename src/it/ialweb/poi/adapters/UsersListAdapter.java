@@ -1,35 +1,53 @@
 package it.ialweb.poi.adapters;
 
+import java.util.List;
+
 import it.ialweb.poi.R;
+import it.ialweb.poi.core.AccountController;
+import it.ialweb.poi.core.TweetUtils;
 import android.content.Context;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 
-	public UsersListAdapter(Context context) {
+	public UsersListAdapter(Context context, final String dialogType) {
 		super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public ParseQuery create() {
-				ParseQuery<ParseUser> query = ParseUser.getQuery();
-				return query;
+				switch (dialogType) {
+					case TweetUtils.TYPE_FOLLOWER:
+						return TweetUtils.getFollowersQuery();
+					case TweetUtils.TYPE_FOLLOWING:
+						return TweetUtils.getFollowingQuery();
+					case TweetUtils.TYPE_ALL_USERS:
+						return TweetUtils.getAllUserQuery();
+					default:
+						return null;
+				}
 			}
 		});
 	}
 
 	@Override
-	public View getItemView(ParseObject object, View v, ViewGroup parent) {
+	public View getItemView(final ParseObject object, View v, ViewGroup parent) {
 		super.getItemView(object, v, parent);
-		UserViewHolder holder;
+		final UserViewHolder holder;
 		
 		if (v == null) {
 			v = View.inflate(getContext(), R.layout.user_row, null);
@@ -46,7 +64,58 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 		
 		holder.userIdTextView.setText(object.getObjectId());
 		holder.ownerTextView.setText(object.getString("username"));
-		holder.follow.setActivated(false);
+		
+		if (AccountController.isLoggedIn()) {
+			final ParseUser me = ParseUser.getCurrentUser();
+			final ParseRelation<ParseObject> followRelation = me.getRelation("follows");
+			ParseQuery<ParseObject> query = followRelation.getQuery();
+			query.whereEqualTo("objectId", object.getObjectId());
+			query.findInBackground(new FindCallback<ParseObject>() {
+
+				@Override
+				public void done(List<ParseObject> list, ParseException e) {
+					if (list.size() > 0) {
+						holder.follow.setChecked(true);
+					} else {
+						holder.follow.setChecked(false);
+					}
+				}
+			});
+			
+			holder.follow.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					if (isChecked) {
+						TweetUtils.follow(object, new TweetUtils.ITweetsUtils() {
+							
+							@Override
+							public void onResponseResult(boolean done) {
+								holder.follow.setChecked(done);
+								if (!done) {
+									Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+								}
+							}
+						}); 
+					} else {
+						TweetUtils.unfollow(object, new TweetUtils.ITweetsUtils() {
+							
+							@Override
+							public void onResponseResult(boolean done) {
+								holder.follow.setChecked(!done);
+								if (!done) {
+									Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+								}
+							}
+						}); 
+					}
+					me.saveInBackground();
+					
+				}
+			});
+		} else {
+			holder.follow.setVisibility(View.INVISIBLE);
+		}
 		
 		ParseFile imageFile = object.getParseFile("image");
 		if (imageFile != null) {

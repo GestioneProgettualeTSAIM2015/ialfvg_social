@@ -3,6 +3,7 @@ package it.ialweb.poi.fragments;
 import it.ialweb.poi.R;
 import it.ialweb.poi.adapters.TweetsListAdapter;
 import it.ialweb.poi.core.AccountController;
+import it.ialweb.poi.core.TweetUtils;
 import it.ialweb.poi.fragments.dialogs.ListDialogFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment.ILoginDialogFragment;
@@ -94,7 +95,7 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 	}
 	
 	private void initList() {
-		TweetsListAdapter adapter = new TweetsListAdapter(getActivity(), true);
+		TweetsListAdapter adapter = new TweetsListAdapter(getActivity(), TweetUtils.TYPE_MINE_TWEETS);
 		mList.setVisibility(View.VISIBLE);
 		mList.setAdapter(adapter);
 		adapter.loadObjects();
