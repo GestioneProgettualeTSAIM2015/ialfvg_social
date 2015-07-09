@@ -1,11 +1,16 @@
 package it.ialweb.poi.activities;
 
+import com.parse.ParseException;
+import com.parse.ParsePush;
+import com.parse.SaveCallback;
+
 import it.ialweb.poi.R;
 import it.ialweb.poi.core.Settings;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
@@ -22,15 +27,26 @@ public class SettingsActivity extends AppCompatActivity
 		
 		mSwitchNotification = (SwitchCompat) findViewById(R.id.switchEnableNotification);
 		mSwitchNotification.setChecked(Settings.isNotificationEnabled(getApplicationContext()));
-		mSwitchNotification.setOnCheckedChangeListener(new OnCheckedChangeListener()
-		{
-			
+		mSwitchNotification.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
 			{
 				Settings.enableNotification(getApplicationContext(), isChecked);
+				
+				if (isChecked) {
+					ParsePush.subscribeInBackground("", new SaveCallback() {
+						@Override
+						public void done(ParseException e) {
+							if (e == null) {
+								Log.d("App",
+										"successfully subscribed to the broadcast channel.");
+							} else {
+								Log.e("App", "failed to subscribe for push", e);
+							}
+						}
+					});
+				} else ParsePush.unsubscribeInBackground("");
 			}
 		});
-
 	}
 }
