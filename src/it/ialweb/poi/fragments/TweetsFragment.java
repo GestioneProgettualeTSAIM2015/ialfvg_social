@@ -1,36 +1,33 @@
 package it.ialweb.poi.fragments;
 
-import java.util.List;
-
-import com.parse.ParseQueryAdapter.OnQueryLoadListener;
-import com.parse.ParseObject;
-
 import it.ialweb.poi.R;
 import it.ialweb.poi.adapters.TweetsListAdapter;
 import it.ialweb.poi.core.AccountController;
 import it.ialweb.poi.core.TweetUtils;
-import it.ialweb.poi.core.TweetUtils.ITweetsUtils;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
+import it.ialweb.poi.fragments.dialogs.LoginDialogFragment.ILoginDialogFragment;
 import it.ialweb.poi.fragments.dialogs.SendRetweetDialogFragment;
 import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment;
-import it.ialweb.poi.fragments.dialogs.LoginDialogFragment.ILoginDialogFragment;
-import it.ialweb.poi.fragments.dialogs.SendTweetDialogFragment.ISendTweetDialogFragment;
+
+import java.util.List;
+
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.parse.ParseObject;
+import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 
 public class TweetsFragment extends Fragment implements ILoginDialogFragment {
 	

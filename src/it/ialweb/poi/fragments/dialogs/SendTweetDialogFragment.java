@@ -1,7 +1,6 @@
 package it.ialweb.poi.fragments.dialogs;
 
 import it.ialweb.poi.R;
-import it.ialweb.poi.fragments.TweetsFragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;

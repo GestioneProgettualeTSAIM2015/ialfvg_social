@@ -43,6 +43,6 @@ public class AccountController {
 	
 	public static void logOut() {
 		Log.i(TAG, "Log out");
-		ParseUser.logOut();
+		ParseUser.logOut();		
 	}
 }

@@ -1,21 +1,21 @@
 package it.ialweb.poi.fragments.dialogs;
 
-import com.parse.ParseObject;
-import com.parse.ParseQueryAdapter;
-
 import it.ialweb.poi.R;
 import it.ialweb.poi.adapters.TweetsListAdapter;
 import it.ialweb.poi.adapters.UsersListAdapter;
 import it.ialweb.poi.core.TweetUtils;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-public class ListDialogFragment extends DialogFragment
+import com.parse.ParseObject;
+import com.parse.ParseQueryAdapter;
+
+@SuppressLint("InflateParams") public class ListDialogFragment extends DialogFragment
 {
 	public final static String TAG = "ListDialogFragment";
 	

@@ -84,7 +84,7 @@
         </receiver>
         
         <!-- replace @drawable/push_icon with your push icon identifier -->
-		<meta-data android:name="it.ialweb.poi.notification_icon" android:resource="@drawable/tweet_default"/>
+		<meta-data android:name="com.parse.push.notification_icon" android:resource="@drawable/tweet_default"/>
     </application>
 
 </manifest>

@@ -3,8 +3,6 @@ package it.ialweb.poi.adapters;
 import it.ialweb.poi.R;
 import it.ialweb.poi.core.TweetUtils;
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;

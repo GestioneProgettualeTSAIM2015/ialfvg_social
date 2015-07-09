@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="@string/follower"
+                android:text="@string/followers"
                 bootstrap:bb_roundedCorners="true"
                 bootstrap:bb_type="primary" />
 

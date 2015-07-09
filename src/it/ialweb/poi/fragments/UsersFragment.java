@@ -1,31 +1,28 @@
 package it.ialweb.poi.fragments;
 
-import java.util.List;
-
 import it.ialweb.poi.R;
 import it.ialweb.poi.activities.UserProfileActivity;
 import it.ialweb.poi.adapters.UsersListAdapter;
+import it.ialweb.poi.adapters.UsersListAdapter.UserViewHolder;
 import it.ialweb.poi.core.TweetUtils;
+
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 
 public class UsersFragment extends Fragment{
@@ -66,10 +63,14 @@ public class UsersFragment extends Fragment{
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				
-				String userId = ((TextView) view.findViewById(R.id.userID)).getText().toString();
+				UserViewHolder uvh = (UserViewHolder) view.getTag();
+				
+				String userId = uvh.userIdTextView.getText().toString();
+				boolean isFollowing = uvh.follow.isChecked();
 				if (userId != null) {
 					Intent myIntent = new Intent(getActivity(), UserProfileActivity.class);
 					myIntent.putExtra(UserProfileActivity.USER_ID_TAG, userId);
+					myIntent.putExtra(UserProfileActivity.IS_FOLLOWED_TAG, isFollowing);
 					getActivity().startActivity(myIntent);
 				}	
 			}

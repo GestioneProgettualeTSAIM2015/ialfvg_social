@@ -8,9 +8,13 @@ import com.parse.Parse;
 import com.parse.ParseCrashReporting;
 import com.parse.ParseException;
 import com.parse.ParsePush;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 public class App extends Application {
+	
+	private static final String TAG = "App";
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -24,21 +28,43 @@ public class App extends Application {
 		// Add your initialization code here
 		Parse.initialize(this, getString(R.string.parse_app_id),
 				getString(R.string.parse_client_key));
-		
-		//ParsePush.unsubscribeInBackground("");
 
-		if (Settings.isNotificationEnabled(getApplicationContext())) {
-			ParsePush.subscribeInBackground("", new SaveCallback() {
-				@Override
-				public void done(ParseException e) {
-					if (e == null) {
-						Log.d("App",
-								"successfully subscribed to the broadcast channel.");
-					} else {
-						Log.e("App", "failed to subscribe for push", e);
-					}
-				}
-			});
-		} else ParsePush.unsubscribeInBackground("");
+		if (Settings.isNotificationEnabled(getApplicationContext()))
+			enableNotification();
+	}
+	
+	public boolean enableNotification() {
+		
+		if (!AccountController.isLoggedIn())
+			return false;
+		
+		ParsePush.subscribeInBackground(getFeedChannel(), new SaveCallback() {
+			
+			@Override
+			public void done(ParseException ex) {
+				if (ex != null)
+					Log.w(TAG, "sub: " + ex.getMessage());
+			}
+		});
+		return true;
+	}
+	
+	public boolean disableNotification() {
+		
+		if (!AccountController.isLoggedIn())
+			return false;
+		
+		ParsePush.unsubscribeInBackground(getFeedChannel(), new SaveCallback() {
+			@Override
+			public void done(ParseException ex) {
+				if (ex != null)
+					Log.w(TAG, "unsub: " + ex.getMessage());
+			}
+		});
+		return true;
+	}
+	
+	public String getFeedChannel() {
+		return "BT_" + ParseUser.getCurrentUser().getObjectId() + "_feed";
 	}
 }

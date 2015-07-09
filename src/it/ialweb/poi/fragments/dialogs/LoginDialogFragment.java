@@ -2,6 +2,7 @@ package it.ialweb.poi.fragments.dialogs;
 
 import it.ialweb.poi.R;
 import it.ialweb.poi.core.AccountController;
+import it.ialweb.poi.core.App;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -168,6 +169,7 @@ import com.parse.SignUpCallback;
 						toggleLoading(false);
 					}
 					else {
+						((App) getActivity().getApplication()).enableNotification();
 						if (mListener != null) mListener.onLoggedIn();
 						dismiss();
 					}
@@ -184,6 +186,7 @@ import com.parse.SignUpCallback;
 						toggleLoading(false);
 					}
 					else {
+						((App) getActivity().getApplication()).enableNotification();
 						if (mListener != null) mListener.onLoggedIn();
 						dismiss();
 					}

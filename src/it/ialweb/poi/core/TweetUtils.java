@@ -6,9 +6,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.bumptech.glide.util.Util;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;

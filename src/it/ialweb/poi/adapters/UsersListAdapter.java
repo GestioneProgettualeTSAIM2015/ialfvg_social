@@ -1,13 +1,12 @@
 package it.ialweb.poi.adapters;
 
-import java.util.List;
-
 import it.ialweb.poi.R;
 import it.ialweb.poi.core.AccountController;
 import it.ialweb.poi.core.TweetUtils;
+
+import java.util.List;
+
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,6 +25,8 @@ import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
+	
+	private Context mContext;
 
 	public UsersListAdapter(final Context context, final String dialogType) {
 		super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
@@ -43,6 +44,8 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 				}
 			}
 		});
+		
+		mContext = context;
 	}
 
 	@Override
@@ -90,6 +93,13 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 				
 				@Override
 				public void onClick(View v) {
+					
+					if (holder.userIdTextView.getText().toString().equals(ParseUser.getCurrentUser().getObjectId())) {
+						holder.follow.setChecked(!holder.follow.isChecked());
+						Toast.makeText(mContext, mContext.getString(R.string.fyourselferr), Toast.LENGTH_SHORT).show();
+						return;
+					}
+					
 					if (holder.follow.isChecked()) {
 						TweetUtils.follow(object, new TweetUtils.ITweetsUtils() {
 							
@@ -132,19 +142,10 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 		return v;
 	}
 	
-	static class UserViewHolder {
-		ParseImageView icon;
-		TextView userIdTextView;
-		TextView ownerTextView;
-		SwitchCompat follow;
+	public static class UserViewHolder {
+		public ParseImageView icon;
+		public TextView userIdTextView;
+		public TextView ownerTextView;
+		public SwitchCompat follow;
 	}
-	
-	private static boolean isNetworkAvailable(Context context) {
-		final Context c = context;
-		ConnectivityManager connectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-		return activeNetworkInfo != null; 
-	}
-	
-
 }

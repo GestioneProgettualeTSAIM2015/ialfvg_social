@@ -2,7 +2,6 @@ package it.ialweb.poi.fragments.dialogs;
 
 import it.ialweb.poi.R;
 import it.ialweb.poi.core.TweetUtils;
-import android.R.mipmap;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,7 +12,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 

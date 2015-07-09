@@ -1,7 +1,5 @@
 package it.ialweb.poi.activities;
 
-import java.util.List;
-
 import it.ialweb.poi.R;
 import it.ialweb.poi.core.AccountController;
 import it.ialweb.poi.core.TweetUtils;
@@ -99,6 +97,11 @@ public class UserProfileActivity extends AppCompatActivity implements ILoginDial
 	
 	private void follow() {
 
+		if (user.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+			Toast.makeText(this, getString(R.string.fyourselferr), Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
 		isFollowed = !isFollowed;
 
 		if (isFollowed) {

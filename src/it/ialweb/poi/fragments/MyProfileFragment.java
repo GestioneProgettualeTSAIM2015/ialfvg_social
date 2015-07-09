@@ -3,6 +3,7 @@ package it.ialweb.poi.fragments;
 import it.ialweb.poi.R;
 import it.ialweb.poi.adapters.TweetsListAdapter;
 import it.ialweb.poi.core.AccountController;
+import it.ialweb.poi.core.App;
 import it.ialweb.poi.core.TweetUtils;
 import it.ialweb.poi.fragments.dialogs.ListDialogFragment;
 import it.ialweb.poi.fragments.dialogs.LoginDialogFragment;
@@ -63,6 +64,7 @@ public class MyProfileFragment extends Fragment implements ILoginDialogFragment 
 			@Override
 			public void onClick(View v) {
 				if(AccountController.isLoggedIn()) {
+					((App) getActivity().getApplication()).disableNotification();
 					AccountController.logOut();
 					onLoggedOut();
 					Toast.makeText(getActivity(), getString(R.string.byebye), Toast.LENGTH_SHORT).show();
