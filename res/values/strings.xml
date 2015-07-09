@@ -22,6 +22,8 @@
     <string name="byebye">bye-bye</string>
     <string name="tweet">What\'s on your mind?</string>
     <string name="confirm_tweet">Tweet!</string>
+    <string name="confirm_retweet">Retweet!</string>
+    <string name="favorite">Favorite</string>
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
     

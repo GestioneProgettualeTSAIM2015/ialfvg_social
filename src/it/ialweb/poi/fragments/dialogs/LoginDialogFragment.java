@@ -127,21 +127,6 @@ import com.parse.SignUpCallback;
 		super.onSaveInstanceState(outState);
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if (mListener == null && activity instanceof ILoginDialogFragment)
-			mListener = (ILoginDialogFragment) activity;
-	}
-
-	@Override
-	public void setTargetFragment(Fragment fragment, int requestCode) {
-		super.setTargetFragment(fragment, requestCode);
-
-		if (fragment instanceof ILoginDialogFragment)
-			mListener = (ILoginDialogFragment) fragment;
-	}
-
 	private void onPositiveButtonClick() {
 		String username = mEtUsername.getText().toString();
 		if (username.length() == 0) {
@@ -167,6 +152,9 @@ import com.parse.SignUpCallback;
 		// form ok
 
 		toggleLoading(true);
+		Fragment tf = getTargetFragment();
+		if (tf instanceof ILoginDialogFragment)
+			mListener = (ILoginDialogFragment) tf;
 
 		if (isRegister)
 			AccountController.register(username, password, email, new SignUpCallback() {
@@ -196,5 +184,12 @@ import com.parse.SignUpCallback;
 					}
 				}
 			});
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		if (mListener == null && activity instanceof ILoginDialogFragment)
+			mListener = (ILoginDialogFragment) activity;
 	}
 }
