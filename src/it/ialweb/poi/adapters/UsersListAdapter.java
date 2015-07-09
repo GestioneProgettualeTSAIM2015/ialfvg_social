@@ -75,6 +75,8 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 
 				@Override
 				public void done(List<ParseObject> list, ParseException e) {
+					if (list == null) return;
+					
 					if (list.size() > 0) {
 						holder.follow.setChecked(true);
 					} else {

@@ -19,6 +19,8 @@ import com.parse.SaveCallback;
 
 public class TweetUtils {
 	
+	private final static String TAG = "TweetUtils";
+	
 	public static final String TYPE_FOLLOWER = "TYPE_FOLLOWER";
 	public static final String TYPE_FOLLOWING = "TYPE_FOLLOWING";
 	public static final String TYPE_FAVORITE_TWEETS = "TYPE_FAVORITE";
@@ -35,6 +37,7 @@ public class TweetUtils {
 		
 		if (!AccountController.isLoggedIn()) return false;
 		
+		Log.d(TAG, "sendRetweet: " + message);
 		ParseObject tweet = new ParseObject("Tweets");
 		tweet.put("message", message);
 		tweet.put("createdBy", ParseUser.getCurrentUser());
@@ -48,6 +51,7 @@ public class TweetUtils {
 		
 		if (!AccountController.isLoggedIn()) return false;
 		
+		Log.d(TAG, "sendRetweet: " + message);
 		ParseObject tweet = new ParseObject("Tweets");
 		tweet.put("message", message);
 		tweet.put("createdBy", ParseUser.getCurrentUser());
@@ -70,6 +74,8 @@ public class TweetUtils {
 	}
 	public static void addFavorite(String tweetId) {
 		if (!AccountController.isLoggedIn()) return;
+		
+		Log.d(TAG, "addFavorite: " + tweetId);
 		ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Tweets");
 		query.whereEqualTo("objectId", tweetId);
 		query.findInBackground(new FindCallback<ParseObject>() {
@@ -90,6 +96,7 @@ public class TweetUtils {
 	public static boolean follow(ParseObject user, final ITweetsUtils listener) {
 		if (!AccountController.isLoggedIn()) return false;
 		
+		Log.d(TAG, "follow: " + user.getString("username"));
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		ParseRelation<ParseObject> followRelation = currentUser.getRelation("follows");
 		followRelation.add(user);
@@ -109,6 +116,7 @@ public class TweetUtils {
 	public static boolean unfollow(ParseObject user, final ITweetsUtils listener) {
 		if (!AccountController.isLoggedIn()) return false;
 		
+		Log.d(TAG, "unfollow: " + user.getString("username"));
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		ParseRelation<ParseObject> followRelation = currentUser.getRelation("follows");
 		followRelation.remove(user);
@@ -128,6 +136,7 @@ public class TweetUtils {
 	public static boolean removeFavorite(ParseObject tweet) {
 		if (!AccountController.isLoggedIn()) return false;
 		
+		Log.d(TAG, "removeFavorite: " + tweet.getString("message"));
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		ParseRelation<ParseObject> tweetRelation = currentUser.getRelation("favorites");
 		tweetRelation.remove(tweet);
