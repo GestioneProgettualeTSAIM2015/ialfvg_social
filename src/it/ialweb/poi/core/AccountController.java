@@ -27,6 +27,8 @@ public class AccountController {
 		user.setEmail(email);
 
 		user.signUpInBackground(callback);
+		user.pinInBackground();
+		user.saveEventually();
 	}
 	
 	public static void logIn(String username, String password, LogInCallback callback) {

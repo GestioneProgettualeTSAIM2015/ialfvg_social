@@ -12,8 +12,9 @@ public class TweetUtils {
 		ParseObject tweet = new ParseObject("Tweets");
 		tweet.put("message", message);
 		tweet.put("createdBy", ParseUser.getCurrentUser());
-		tweet.saveInBackground();
-		
+		//tweet.saveInBackground();
+		tweet.pinInBackground();
+		tweet.saveEventually();
 		return true;
 	}
 	
@@ -24,8 +25,9 @@ public class TweetUtils {
 		ParseObject follow = new ParseObject("Followers");
 		follow.put("followedUserId", followedUserId);
 		follow.put("userId", ParseUser.getCurrentUser().getObjectId());
-		follow.saveInBackground();
-		
+		//follow.saveInBackground();
+		follow.saveEventually();
+		follow.pinInBackground();
 		return true;
 	}
 }

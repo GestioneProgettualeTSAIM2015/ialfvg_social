@@ -2,6 +2,8 @@ package it.ialweb.poi.adapters;
 
 import it.ialweb.poi.R;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +18,15 @@ import com.parse.ParseUser;
 
 public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 
-	public UsersListAdapter(Context context) {
+	public UsersListAdapter(final Context context) {
 		super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public ParseQuery create() {
 				ParseQuery<ParseUser> query = ParseUser.getQuery();
+				//test user on background
+				if(!isNetworkAvailable(context)){
+					query.fromLocalDatastore();
+				}	
 				return query;
 			}
 		});
@@ -43,7 +49,7 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 		} else {
 			holder = (UserViewHolder) v.getTag();
 		}
-		
+		object.pinInBackground();
 		holder.userIdTextView.setText(object.getObjectId());
 		holder.ownerTextView.setText(object.getString("username"));
 		holder.follow.setActivated(false);
@@ -65,5 +71,13 @@ public class UsersListAdapter extends ParseQueryAdapter<ParseObject> {
 		TextView ownerTextView;
 		SwitchCompat follow;
 	}
+	
+	private static boolean isNetworkAvailable(Context context) {
+		final Context c = context;
+		ConnectivityManager connectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null; 
+	}
+	
 
 }

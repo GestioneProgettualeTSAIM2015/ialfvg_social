@@ -2,6 +2,8 @@ package it.ialweb.poi.adapters;
 
 import it.ialweb.poi.R;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -15,12 +17,15 @@ import com.parse.ParseUser;
 
 public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 
-	public TweetsListAdapter(Context context, final boolean isMyProfile) {
+	public TweetsListAdapter(final Context context, final boolean isMyProfile) {
 		super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public ParseQuery create() {
 				ParseUser user = ParseUser.getCurrentUser();
 				ParseQuery query = new ParseQuery("Tweets");
+				if(!isNetworkAvailable(context)){
+					query.fromLocalDatastore();
+				}					
 				query.orderByDescending("updatedAt");
 				if (user != null && isMyProfile)
 					query.whereEqualTo("createdBy", user);
@@ -57,6 +62,7 @@ public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 		ParseUser creator = null;
 		try {
 			creator = object.getParseUser("createdBy");
+			object.pinInBackground();
 			holder.ownerTextView.setText(creator.getUsername());
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -72,4 +78,12 @@ public class TweetsListAdapter extends ParseQueryAdapter<ParseObject> {
 		TextView ownerTextView;
 		TextView messageView;
 	}
+	
+	private static boolean isNetworkAvailable(Context context) {
+		final Context c = context;
+		ConnectivityManager connectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null; 
+	}
+	
 }
